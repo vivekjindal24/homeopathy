@@ -224,19 +224,47 @@ class RouterNotifier extends Notifier<void> implements Listenable {
 
       final role = authState.user.role;
 
-      // Staff cannot access the commissions page
-      if (role == UserRole.staff && path == AppRoutes.commissions) {
-        return AppRoutes.dashboard;
-      }
-
-      // Patient guard — patients can only see their own data (dashboard only)
+      // Patient guard — patients can only see their own notifications/dashboard
       if (role == UserRole.patient) {
         const patientAllowed = [AppRoutes.dashboard, AppRoutes.notifications];
         if (!patientAllowed.any((r) => path.startsWith(r))) {
           return AppRoutes.dashboard;
         }
+        return null;
       }
 
+      // Lab partner guard — can see dashboard, notifications, and lab reports
+      // Lab reports are under /patients/:id/reports so allow /patients prefix.
+      // Queue, commissions, and appointment booking are restricted.
+      if (role == UserRole.labPartner) {
+        const labDenied = [
+          AppRoutes.queue,
+          AppRoutes.commissions,
+          AppRoutes.appointmentBooking,
+        ];
+        if (labDenied.any((r) => path.startsWith(r))) {
+          return AppRoutes.dashboard;
+        }
+        return null;
+      }
+
+      // Staff guard — can access everything except commissions
+      if (role == UserRole.staff) {
+        if (path == AppRoutes.commissions) return AppRoutes.dashboard;
+        return null;
+      }
+
+      // Receptionist guard — can access appointments/patients/queue/billing,
+      // but not commissions or clinical write operations (prescriptions).
+      if (role == UserRole.receptionist) {
+        const receptionistDenied = [AppRoutes.commissions];
+        if (receptionistDenied.any((r) => path.startsWith(r))) {
+          return AppRoutes.dashboard;
+        }
+        return null;
+      }
+
+      // Doctor and Admin have full access.
       return null;
     }
 

@@ -154,7 +154,7 @@ class SupabaseAuthRepositoryImpl implements AuthRepository {
   Future<void> _cacheUserLocally(UserModel user) async {
     await _storage.write(key: AppConstants.secureKeyUserId, value: user.id);
     await _storage.write(
-        key: AppConstants.secureKeyUserRole, value: user.role.name);
+        key: AppConstants.secureKeyUserRole, value: user.role.dbValue);
   }
 
   Future<void> _clearHiveCache() async {

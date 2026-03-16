@@ -39,7 +39,7 @@ class UserModel {
         'email': email,
         'phone': phone,
         'full_name': fullName,
-        'role': role.name,
+        'role': role.dbValue,
         'avatar_url': avatarUrl,
         'created_at': createdAt.toIso8601String(),
       };

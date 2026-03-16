@@ -68,21 +68,30 @@ class AppShell extends ConsumerWidget {
         activeIcon: Icons.dashboard_rounded,
         route: AppRoutes.dashboard,
       ),
-      _NavItemData(
+    ];
+
+    // Patients tab — all clinic staff see patients; lab partner and patient do not
+    if (role != UserRole.labPartner && role != UserRole.patient) {
+      baseItems.add(_NavItemData(
         label: 'Patients',
         icon: Icons.people_outline_rounded,
         activeIcon: Icons.people_rounded,
         route: AppRoutes.patientList,
-      ),
-      _NavItemData(
+      ));
+    }
+
+    // Queue tab — clinic staff (except lab partner / patient)
+    if (role != UserRole.labPartner && role != UserRole.patient) {
+      baseItems.add(_NavItemData(
         label: 'Queue',
         icon: Icons.list_alt_outlined,
         activeIcon: Icons.list_alt_rounded,
         route: AppRoutes.queue,
-      ),
-    ];
+      ));
+    }
 
-    if (role == UserRole.doctor) {
+    // Commissions tab — doctor and admin only
+    if (role == UserRole.doctor || role == UserRole.admin) {
       baseItems.add(_NavItemData(
         label: 'Commissions',
         icon: Icons.monetization_on_outlined,
@@ -91,6 +100,7 @@ class AppShell extends ConsumerWidget {
       ));
     }
 
+    // Notifications tab — everyone
     baseItems.add(_NavItemData(
       label: 'Alerts',
       icon: Icons.notifications_outlined,

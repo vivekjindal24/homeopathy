@@ -27,19 +27,13 @@ class AuthStateAuthenticated extends AuthState {
   /// Convenience role checks.
   bool get isDoctor => user.role == UserRole.doctor;
   bool get isStaff => user.role == UserRole.staff;
+  bool get isReceptionist => user.role == UserRole.receptionist;
+  bool get isAdmin => user.role == UserRole.admin;
+  bool get isLabPartner => user.role == UserRole.labPartner;
   bool get isPatient => user.role == UserRole.patient;
 
-  /// The home route for this role.
-  String get homeRoute {
-    switch (user.role) {
-      case UserRole.doctor:
-        return '/dashboard';
-      case UserRole.staff:
-        return '/dashboard';
-      case UserRole.patient:
-        return '/dashboard';
-    }
-  }
+  /// The home route for this role (all roles land on dashboard).
+  String get homeRoute => '/dashboard';
 }
 
 class AuthStateUnauthenticated extends AuthState {
