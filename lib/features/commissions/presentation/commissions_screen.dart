@@ -92,7 +92,8 @@ class CommissionsScreen extends ConsumerWidget {
                 ...pending.map((c) => _CommissionTile(
                       commission: c,
                       canMarkPaid:
-                          user?.role == UserRole.doctor,
+                          user?.role == UserRole.doctor ||
+                          user?.role == UserRole.admin,
                       onMarkPaid: () async {
                         await ref
                             .read(commissionRepositoryProvider)

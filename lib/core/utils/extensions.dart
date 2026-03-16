@@ -100,6 +100,12 @@ extension UserRoleIconX on UserRole {
         return Icons.medical_services_rounded;
       case UserRole.staff:
         return Icons.badge_rounded;
+      case UserRole.receptionist:
+        return Icons.support_agent_rounded;
+      case UserRole.admin:
+        return Icons.admin_panel_settings_rounded;
+      case UserRole.labPartner:
+        return Icons.biotech_rounded;
       case UserRole.patient:
         return Icons.person_rounded;
     }

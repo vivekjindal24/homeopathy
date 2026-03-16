@@ -76,19 +76,50 @@ class AppConstants {
 }
 
 /// User role enum matching the database constraint.
-enum UserRole { doctor, staff, patient }
+enum UserRole { doctor, staff, receptionist, admin, labPartner, patient }
 
 extension UserRoleX on UserRole {
-  String get name {
+  /// Database string value for this role (used in JSON serialization and DB writes).
+  String get dbValue {
     switch (this) {
       case UserRole.doctor:
         return 'doctor';
       case UserRole.staff:
         return 'staff';
+      case UserRole.receptionist:
+        return 'receptionist';
+      case UserRole.admin:
+        return 'admin';
+      case UserRole.labPartner:
+        return 'lab_partner';
       case UserRole.patient:
         return 'patient';
     }
   }
+
+  String get displayName {
+    switch (this) {
+      case UserRole.doctor:
+        return 'Doctor';
+      case UserRole.staff:
+        return 'Staff';
+      case UserRole.receptionist:
+        return 'Receptionist';
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.labPartner:
+        return 'Lab Partner';
+      case UserRole.patient:
+        return 'Patient';
+    }
+  }
+
+  /// Whether this role is a clinic staff member (internal user).
+  bool get isClinicStaff =>
+      this == UserRole.doctor ||
+      this == UserRole.staff ||
+      this == UserRole.receptionist ||
+      this == UserRole.admin;
 
   static UserRole fromString(String value) {
     switch (value.toLowerCase()) {
@@ -96,6 +127,12 @@ extension UserRoleX on UserRole {
         return UserRole.doctor;
       case 'staff':
         return UserRole.staff;
+      case 'receptionist':
+        return UserRole.receptionist;
+      case 'admin':
+        return UserRole.admin;
+      case 'lab_partner':
+        return UserRole.labPartner;
       default:
         return UserRole.patient;
     }

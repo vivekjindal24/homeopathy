@@ -45,11 +45,14 @@ class DashboardScreen extends ConsumerWidget {
             _TodayQueuePreview(),
             const SizedBox(height: AppSpacing.xl),
             if (user?.role == UserRole.doctor ||
-                user?.role == UserRole.staff) ...[
+                user?.role == UserRole.staff ||
+                user?.role == UserRole.receptionist ||
+                user?.role == UserRole.admin) ...[
               _QuickActions(),
               const SizedBox(height: AppSpacing.xl),
             ],
-            if (user?.role == UserRole.doctor) ...[
+            if (user?.role == UserRole.doctor ||
+                user?.role == UserRole.admin) ...[
               _WeeklyChart(),
               const SizedBox(height: AppSpacing.xl),
             ],
@@ -121,7 +124,7 @@ class _GreetingCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                   ),
                   child: Text(
-                    (user?.role.name ?? 'staff').toUpperCase(),
+                    (user?.role.displayName ?? 'Staff').toUpperCase(),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),

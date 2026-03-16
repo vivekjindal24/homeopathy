@@ -58,10 +58,13 @@ class RoleBadge extends StatelessWidget {
     final color = switch (role) {
       UserRole.doctor => AppColors.primary,
       UserRole.staff => AppColors.secondary,
+      UserRole.receptionist => AppColors.info,
+      UserRole.admin => AppColors.error,
+      UserRole.labPartner => AppColors.success,
       UserRole.patient => AppColors.warning,
     };
 
-    return StatusBadge(label: role.name.toUpperCase(), color: color);
+    return StatusBadge(label: role.displayName.toUpperCase(), color: color);
   }
 }
 

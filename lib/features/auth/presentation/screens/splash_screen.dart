@@ -125,7 +125,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
       _navigated = true;
       if (authState is AuthStateAuthenticated) {
-        debugPrint('SplashScreen: authenticated as ${authState.user.role.name}');
+        debugPrint('SplashScreen: authenticated as ${authState.user.role.dbValue}');
         context.go(authState.homeRoute);
       } else if (authState is AuthStateSessionExpired) {
         context.go(AppRoutes.login, extra: 'session_expired');
