@@ -86,7 +86,7 @@ class NotificationService {
       channelDescription: 'Clinic notifications',
       importance: Importance.high,
       priority: Priority.high,
-      color: Color(0xFF00D2B4),
+      color: Color(0xFF7C3AED),
     );
     const iosDetails = DarwinNotificationDetails();
     const details =

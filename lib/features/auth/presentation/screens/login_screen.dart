@@ -127,7 +127,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     ref.listen(authNotifierProvider, _onAuthStateChange);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
+      value: SystemUiOverlayStyle.dark,
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: Stack(
@@ -208,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: AppColors.border),
       ),
       padding: const EdgeInsets.all(AppSpacing.xxl),
       child: Column(
