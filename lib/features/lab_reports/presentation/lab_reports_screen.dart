@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -92,14 +92,15 @@ class LabReportsScreen extends ConsumerWidget {
     if (image == null) return;
 
     try {
-      final file = File(image.path);
-      final ext = image.path.split('.').last;
-      final path = '${patientId}/${const Uuid().v4()}.$ext';
+      final Uint8List fileBytes = await image.readAsBytes();
+      final ext = image.name.contains('.') ? image.name.split('.').last : 'jpg';
+      final path = '$patientId/${const Uuid().v4()}.$ext';
 
       final storageService = ref.read(storageServiceProvider);
       final storedPath = await storageService.uploadFile(
         bucket: AppConstants.bucketLabReports,
-        file: file,
+        fileBytes: fileBytes,
+        fileName: image.name,
         customPath: path,
       );
 

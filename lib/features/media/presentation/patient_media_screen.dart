@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -290,6 +290,7 @@ class _UploadSheetState extends ConsumerState<_UploadSheet> {
   MediaType _mediaType = MediaType.before;
   final _captionCtrl = TextEditingController();
   XFile? _picked;
+  Uint8List? _pickedBytes;
   bool _uploading = false;
 
   @override
@@ -325,11 +326,11 @@ class _UploadSheetState extends ConsumerState<_UploadSheet> {
             style: AppTypography.bodyMedium,
           ),
           const SizedBox(height: AppSpacing.lg),
-          if (_picked != null)
+          if (_picked != null && _pickedBytes != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-              child: Image.file(
-                File(_picked!.path),
+              child: Image.memory(
+                _pickedBytes!,
                 height: 120,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -348,7 +349,7 @@ class _UploadSheetState extends ConsumerState<_UploadSheet> {
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: _picked == null || _uploading ? null : _upload,
+                  onPressed: _picked == null || _pickedBytes == null || _uploading ? null : _upload,
                   icon: _uploading
                       ? const SizedBox(
                           width: 16,
@@ -373,20 +374,28 @@ class _UploadSheetState extends ConsumerState<_UploadSheet> {
   Future<void> _pickImage() async {
     final image =
         await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) setState(() => _picked = image);
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      setState(() {
+        _picked = image;
+        _pickedBytes = bytes;
+      });
+    }
   }
 
   Future<void> _upload() async {
     setState(() => _uploading = true);
     try {
-      final file = File(_picked!.path);
-      final ext = _picked!.path.split('.').last;
+      final bytes = _pickedBytes!;
+      final fileName = _picked!.name;
+      final ext = fileName.contains('.') ? fileName.split('.').last : 'jpg';
       final path = '${widget.patientId}/${const Uuid().v4()}.$ext';
 
       final storageService = ref.read(storageServiceProvider);
       final storedPath = await storageService.uploadFile(
         bucket: AppConstants.bucketPatientMedia,
-        file: file,
+        fileBytes: bytes,
+        fileName: fileName,
         customPath: path,
       );
 

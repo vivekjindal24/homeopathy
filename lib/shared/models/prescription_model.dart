@@ -100,7 +100,7 @@ class PrescriptionModel {
 
     return PrescriptionModel(
       id: json['id'] as String,
-      appointmentId: json['appointment_id'] as String,
+      appointmentId: json['appointment_id'] as String? ?? '',
       patientId: json['patient_id'] as String,
       doctorId: json['doctor_id'] as String,
       chiefComplaint: json['chief_complaint'] as String?,
