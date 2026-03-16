@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_handler.dart';
 import '../../../core/services/supabase_service.dart';
 import '../../../core/utils/constants.dart';
@@ -79,16 +80,44 @@ class AppointmentRepository {
   }
 
   /// Book a new appointment.
+  ///
+  /// Throws an [AppException] with a user-friendly message if the patient
+  /// already has an appointment at the exact same [scheduled_at] timestamp.
   Future<AppointmentModel> createAppointment(
       Map<String, dynamic> data) async {
     try {
       data.remove('id');
+
+      // Duplicate-booking guard: check whether this patient already has an
+      // appointment at the requested time before hitting the DB UNIQUE
+      // constraint (which would surface as a raw Postgres error).
+      final patientId = data['patient_id'] as String?;
+      final scheduledAt = data['scheduled_at'] as String?;
+      if (patientId != null && scheduledAt != null) {
+        final existing = await _client
+            .from(AppConstants.tableAppointments)
+            .select('id')
+            .eq('patient_id', patientId)
+            .eq('scheduled_at', scheduledAt)
+            .maybeSingle();
+        if (existing != null) {
+          throw const ServerException(
+            message:
+                'This patient already has an appointment booked at the selected '
+                'date and time. Please choose a different time slot.',
+            code: 'duplicate_appointment',
+          );
+        }
+      }
+
       final response = await _client
           .from(AppConstants.tableAppointments)
           .insert(data)
           .select()
           .single();
       return AppointmentModel.fromJson(response);
+    } on AppException {
+      rethrow;
     } catch (e) {
       throw ErrorHandler.map(e);
     }

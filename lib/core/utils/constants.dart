@@ -103,7 +103,14 @@ extension UserRoleX on UserRole {
 }
 
 /// Appointment status enum.
-enum AppointmentStatus { scheduled, waiting, inProgress, completed, cancelled }
+enum AppointmentStatus {
+  scheduled,
+  waiting,
+  inProgress,
+  completed,
+  cancelled,
+  noShow,
+}
 
 extension AppointmentStatusX on AppointmentStatus {
   String get value {
@@ -118,6 +125,8 @@ extension AppointmentStatusX on AppointmentStatus {
         return 'completed';
       case AppointmentStatus.cancelled:
         return 'cancelled';
+      case AppointmentStatus.noShow:
+        return 'no_show';
     }
   }
 
@@ -133,6 +142,8 @@ extension AppointmentStatusX on AppointmentStatus {
         return 'Completed';
       case AppointmentStatus.cancelled:
         return 'Cancelled';
+      case AppointmentStatus.noShow:
+        return 'No Show';
     }
   }
 
@@ -146,6 +157,8 @@ extension AppointmentStatusX on AppointmentStatus {
         return AppointmentStatus.completed;
       case 'cancelled':
         return AppointmentStatus.cancelled;
+      case 'no_show':
+        return AppointmentStatus.noShow;
       default:
         return AppointmentStatus.scheduled;
     }

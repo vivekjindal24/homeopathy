@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import 'app_exception.dart';
 
@@ -45,7 +45,7 @@ class ErrorHandler {
       return _mapDioException(error);
     }
 
-    if (error is SocketException) {
+    if (!kIsWeb && error.toString().contains('SocketException')) {
       return const NetworkException(
         message: 'No internet connection. Please check your network.',
         code: 'NO_INTERNET',

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,20 +12,25 @@ class StorageService {
   final SupabaseClient _client;
   const StorageService(this._client);
 
-  /// Upload a [file] to [bucket]/[path].
+  /// Upload [fileBytes] to [bucket].
+  ///
+  /// [fileName] is used to derive the file extension and as a fallback name.
   /// Returns the storage path of the uploaded file.
   Future<String> uploadFile({
     required String bucket,
-    required File file,
+    required Uint8List fileBytes,
+    required String fileName,
     String? customPath,
     String? contentType,
   }) async {
     try {
-      final ext = file.path.split('.').last.toLowerCase();
+      final ext = fileName.contains('.')
+          ? fileName.split('.').last.toLowerCase()
+          : 'bin';  // Use generic binary extension when the filename has no dot
       final path = customPath ?? '${const Uuid().v4()}.$ext';
-      await _client.storage.from(bucket).upload(
+      await _client.storage.from(bucket).uploadBinary(
             path,
-            file,
+            fileBytes,
             fileOptions: FileOptions(
               contentType: contentType ?? _mimeType(ext),
               upsert: false,

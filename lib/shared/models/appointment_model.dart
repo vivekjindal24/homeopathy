@@ -31,6 +31,11 @@ class AppointmentModel {
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
+    // Support both `queue_number` (Dart model name) and legacy `token_number`
+    // (initial DB column name before migration 002).
+    final queueNum = json['queue_number'] as int? ??
+        json['token_number'] as int? ??
+        0;
     return AppointmentModel(
       id: json['id'] as String,
       patientId: json['patient_id'] as String,
@@ -40,7 +45,7 @@ class AppointmentModel {
       status: AppointmentStatusX.fromString(
         json['status'] as String? ?? 'scheduled',
       ),
-      queueNumber: json['queue_number'] as int? ?? 0,
+      queueNumber: queueNum,
       notes: json['notes'] as String?,
       patientName: json['patient_name'] as String?,
       patientCode: json['patient_code'] as String?,
