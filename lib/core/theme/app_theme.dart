@@ -5,58 +5,61 @@ import 'app_spacing.dart';
 import 'app_typography.dart';
 
 /// The single source of truth for the app's visual theme.
-/// Only dark theme is provided per the design system spec.
+/// White and purple modern minimalist light theme.
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get darkTheme {
+  static ThemeData get lightTheme {
     const colorScheme = ColorScheme(
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       primary: AppColors.primary,
       onPrimary: AppColors.textInverse,
       primaryContainer: AppColors.overlay10,
       onPrimaryContainer: AppColors.primary,
       secondary: AppColors.secondary,
-      onSecondary: AppColors.textPrimary,
-      secondaryContainer: Color(0xFF1A2D4A),
-      onSecondaryContainer: AppColors.secondary,
+      onSecondary: AppColors.textInverse,
+      secondaryContainer: Color(0xFFEDE9FE),
+      onSecondaryContainer: AppColors.secondaryDark,
       error: AppColors.error,
-      onError: AppColors.textPrimary,
-      errorContainer: Color(0xFF3D0D1A),
-      onErrorContainer: AppColors.error,
+      onError: AppColors.textInverse,
+      errorContainer: Color(0xFFFEE2E2),
+      onErrorContainer: Color(0xFF991B1B),
       surface: AppColors.surface,
       onSurface: AppColors.textPrimary,
-      surfaceContainerHighest: AppColors.card,
+      surfaceContainerHighest: AppColors.cardElevated,
       onSurfaceVariant: AppColors.textSecondary,
       outline: AppColors.border,
       outlineVariant: AppColors.divider,
-      shadow: Colors.black,
-      scrim: Colors.black87,
+      shadow: Color(0x1F000000),
+      scrim: Color(0x99000000),
       inverseSurface: AppColors.textPrimary,
-      onInverseSurface: AppColors.background,
-      inversePrimary: AppColors.primaryDark,
+      onInverseSurface: AppColors.textInverse,
+      inversePrimary: AppColors.primaryLight,
     );
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.background,
       textTheme: AppTypography.textTheme,
 
       // AppBar
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: AppTypography.headlineMedium,
         systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
-          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
           systemNavigationBarColor: AppColors.background,
+          systemNavigationBarIconBrightness: Brightness.dark,
         ),
         iconTheme: const IconThemeData(color: AppColors.textPrimary, size: 22),
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
       ),
 
       // Cards
@@ -68,6 +71,7 @@ class AppTheme {
           side: const BorderSide(color: AppColors.border, width: 1),
         ),
         margin: EdgeInsets.zero,
+        shadowColor: Color(0x0F7C3AED),
       ),
 
       // Input fields
@@ -169,7 +173,7 @@ class AppTheme {
 
       // Bottom navigation bar
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.background,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.textSecondary,
         type: BottomNavigationBarType.fixed,
@@ -182,7 +186,7 @@ class AppTheme {
 
       // Chips
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.card,
+        backgroundColor: AppColors.surface,
         selectedColor: AppColors.overlay20,
         labelStyle: AppTypography.labelMedium,
         side: const BorderSide(color: AppColors.border),
@@ -204,8 +208,9 @@ class AppTheme {
 
       // Dialog
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.card,
+        backgroundColor: AppColors.background,
         elevation: 8,
+        shadowColor: Color(0x1F7C3AED),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         ),
@@ -215,8 +220,10 @@ class AppTheme {
 
       // SnackBar
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: AppColors.cardElevated,
-        contentTextStyle: AppTypography.bodyMedium,
+        backgroundColor: AppColors.textPrimary,
+        contentTextStyle: AppTypography.bodyMedium.copyWith(
+          color: AppColors.textInverse,
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -250,8 +257,9 @@ class AppTheme {
 
       // Popups / menus
       popupMenuTheme: PopupMenuThemeData(
-        color: AppColors.card,
+        color: AppColors.background,
         elevation: 8,
+        shadowColor: Color(0x1F7C3AED),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           side: const BorderSide(color: AppColors.border),
@@ -282,7 +290,7 @@ class AppTheme {
 
       // Bottom sheets
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.card,
+        backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(AppSpacing.radiusLg),
